@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<link href="favicon-32.png" rel="shortcut icon">
+<style>
+    body {
+        font-family: sans-serif;
+        background: rgb(243, 243, 243);
+        color: rgb(54, 54, 54);
+        min-height:100vh;
+      
+    }
+
+    a {
+        padding: 4px;
+        color: #000;
+        text-decoration: none;
+    }
+
+    #content {
+        display: flex;
+        justify-content: space-between;
+        align-content: space-around;
+        flex-wrap: wrap;
+
+
+    }
+
+    #content img {
+        flex: 1 1 20%;
+        height: 20%;
+        width: 20%;
+        margin: 12px;
+        border-radius: 8px;
+    }
+
+    #modal {
+        position: fixed;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        background-color: rgba(0, 0, 0, 0.8);
+        align-content: center;
+        justify-content: center;
+    }
+
+    video {
+        object-fit: cover;
+    }
+    .footer{
+
+        display:flex;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+       
+        background: rgb(243, 243, 243);
+    }
+</style>
+
+<div style="font-size:56px;text-align:center;margin-top:24px;margin-bottom:24px">
+    Christine Lopez
+</div>
+
+<div id="content">
+    <img src="greenshirtpurplesky.jpg" />
+    <img src="blue.jpg" />
+    <img src="pinkspace.jpg" />
+    <img src="ribbon.jpg" />
+    <img src="slugs.jpg" />
+    <img src="egypt.jpg" />
+    <img src="bourdain.jpg" />
+    <img src="coral.jpg" />
+    <img src="fish.jpg" />
+    <img src="rip.jpg" />
+    <img src="sleep.jpg" />
+    <img src="wisp.jpg" />
+    <img src="body.jpg" />
+    <img src="floss.jpg" />
+    <img src="wineflower.jpg" />
+</div>
+
+<div style="justify-content:center" class="footer">
+    <a href="https://society6.com/krysialopez">society6</a>
+    <a href="https://instagram.com/krysialopez">instagram</a>
+    <a href="mailto:contact@christinelopez.ca">contact</a>
+</div>
+
+<div id="modal" style="display:none">
+    <video id="video" autoplay loop muted>
+        <source id="video-mp4" type="video/mp4" />
+    </video>
+</div>
+
+<script>
+    (function () {
+        var modal = document.getElementById('modal');
+        var video = document.getElementById('video');
+        var videomp4 = document.getElementById('video-mp4');
+        modal.addEventListener('click', function () {
+            modal.style.display = "none";
+            video.style.display = "none";
+        });
+
+        var anim = ['greenshirtpurplesky.jpg'];
+        var images = document.getElementsByTagName("img");
+        for (const image of images) {
+            image.addEventListener('click', function (e) {
+                modal.style.display = 'flex';
+                for (var i = 0; i < anim.length; i++) {
+                    if (image.src.endsWith(anim[i])) {
+                        modal.style.backgroundImage = '';
+                        videomp4.src = image.src.replace(/\....$/, '.mp4');
+                        video.load();
+                        video.play();
+                        video.style.display = "flex";
+                        return;
+                    }
+                }
+                modal.style.backgroundImage = 'url("' + image.src + '")';
+            });
+        }
+    })();
+</script>
