@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<script defer src="js.js"></script>
+<title>Christine</title>
 <link href="favicon-32.png" rel="shortcut icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,7 +12,6 @@
         background: rgb(243, 243, 243);
         color: rgb(54, 54, 54);
         min-height:100vh;
-      
     }
 
     a {
@@ -24,8 +25,6 @@
         justify-content: space-between;
         align-content: space-around;
         flex-wrap: wrap;
-
-
     }
 
     #content img {
@@ -74,24 +73,57 @@
         top: 0;
         right: 0;
         bottom: 0;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: contain;
+        overflow: scroll;
         background-color: rgba(0, 0, 0, 0.8);
-        align-content: center;
-        justify-content: center;
+        flex-wrap: no-wrap;
+        gap: 24px;
+        align-items: center;
+        justify-items: center;
+        scrollbar-width: none;
     }
 
-    video {
-        object-fit: cover;
+    #modal::-webkit-scrollbar {
+      display: none;
     }
+
+    #modal > video, #modal > img {
+        object-fit: contain;
+        user-select: none;
+        user-drag: none;
+    }
+
+    @media (orientation:landscape) {
+        #modal > div {
+            min-width: 50%;
+        }
+
+        #modal > img, #modal > video {
+            height: 90%;
+            max-width: 60%;
+        }
+    }
+
+    @media (orientation:portrait) {
+        #modal {
+            flex-direction: column;
+        }
+
+        #modal > div {
+            min-height: 50%;
+        }
+
+        #modal > img, #modal > video {
+            width: 90%;
+            max-height: 60%;
+        }
+    }
+
     .footer{
-
-        display:flex;
+        display: flex;
         position: fixed;
         bottom: 0;
         width: 100%;
-       
+        justify-content: center;
         background: rgb(243, 243, 243);
     }
 </style>
@@ -101,7 +133,7 @@
 </div>
 
 <div id="content">
-    <img src="greenshirtpurplesky.jpg" />
+    <img src="greenshirtpurplesky.jpg" data-modal="greenshirtpurplesky.mp4" />
     <img src="blue.jpg" />
     <img src="pinkspace.jpg" />
     <img src="ribbon.jpg" />
@@ -118,45 +150,11 @@
     <img src="wineflower.jpg" />
 </div>
 
-<div style="justify-content:center" class="footer">
+<div class="footer">
     <a href="https://society6.com/krysialopez">society6</a>
     <a href="https://instagram.com/krysialopez">instagram</a>
     <a href="mailto:contact@christinelopez.ca">contact</a>
 </div>
 
 <div id="modal" style="display:none">
-    <video id="video" autoplay loop muted>
-        <source id="video-mp4" type="video/mp4" />
-    </video>
 </div>
-
-<script>
-    (function () {
-        var modal = document.getElementById('modal');
-        var video = document.getElementById('video');
-        var videomp4 = document.getElementById('video-mp4');
-        modal.addEventListener('click', function () {
-            modal.style.display = "none";
-            video.style.display = "none";
-        });
-
-        var anim = ['greenshirtpurplesky.jpg'];
-        var images = document.getElementsByTagName("img");
-        for (const image of images) {
-            image.addEventListener('click', function (e) {
-                modal.style.display = 'flex';
-                for (var i = 0; i < anim.length; i++) {
-                    if (image.src.endsWith(anim[i])) {
-                        modal.style.backgroundImage = '';
-                        videomp4.src = image.src.replace(/\....$/, '.mp4');
-                        video.load();
-                        video.play();
-                        video.style.display = "flex";
-                        return;
-                    }
-                }
-                modal.style.backgroundImage = 'url("' + image.src + '")';
-            });
-        }
-    })();
-</script>
