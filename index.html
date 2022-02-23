@@ -3,15 +3,33 @@
 <style>
     body {
         font-family: sans-serif;
-        background: rgb(243, 243, 243);
-        color: rgb(54, 54, 54);
         min-height:100vh;
-      
+    }
+
+    @media (prefers-color-scheme:light) {
+        body {
+            background: rgb(243, 243, 243);
+            color: rgb(54, 54, 54);
+        }
+
+        a {
+            color: #000;
+        }
+    }
+
+    @media (prefers-color-scheme:dark) {
+        body {
+            background: rgb(54, 54, 54);
+            color: rgb(243, 243, 243);
+        }
+
+        a {
+            color: #fff;
+        }
     }
 
     a {
         padding: 4px;
-        color: #000;
         text-decoration: none;
     }
 
