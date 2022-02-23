@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<title>Christine</title>
 <link href="favicon-32.png" rel="shortcut icon">
 <style>
     body {
@@ -6,7 +7,6 @@
         background: rgb(243, 243, 243);
         color: rgb(54, 54, 54);
         min-height:100vh;
-      
     }
 
     a {
@@ -20,8 +20,6 @@
         justify-content: space-between;
         align-content: space-around;
         flex-wrap: wrap;
-
-
     }
 
     #content img {
@@ -38,24 +36,74 @@
         top: 0;
         right: 0;
         bottom: 0;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: contain;
         background-color: rgba(0, 0, 0, 0.8);
-        align-content: center;
-        justify-content: center;
     }
 
-    video {
+    #modal > video, #modal > img {
         object-fit: cover;
+        user-select: none;
+        user-drag: none;
     }
-    .footer{
 
-        display:flex;
+    .modal-star {
+        transform-origin: 50% 50%;
+        transform: translate(-50%, -50%);
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        pointer-events: none;
+    }
+
+    @media (orientation:landscape) {
+        #modal > img, #modal > video {
+            width: 50%;
+        }
+
+        .modal-prev {
+            transform-origin: 50% 50%;
+            transform: translate(-50%, -50%);
+            position: fixed;
+            left: 0;
+            top: 50%;
+        }
+
+        .modal-next {
+            transform-origin: 50% 50%;
+            transform: translate(50%, -50%);
+            position: fixed;
+            right: 0;
+            top: 50%;
+        }
+    }
+
+    @media (orientation:portrait) {
+        #modal > img, #modal > video {
+            height: 50%;
+        }
+
+        .modal-prev {
+            transform-origin: 50% 50%;
+            transform: translate(-50%, -50%);
+            position: fixed;
+            left: 50%;
+            top: 0;
+        }
+
+        .modal-next {
+            transform-origin: 50% 50%;
+            transform: translate(-50%, 50%);
+            position: fixed;
+            left: 50%;
+            bottom: 0;
+        }
+    }
+
+    .footer{
+        display: flex;
         position: fixed;
         bottom: 0;
         width: 100%;
-       
+        justify-content: center;
         background: rgb(243, 243, 243);
     }
 </style>
@@ -65,7 +113,7 @@
 </div>
 
 <div id="content">
-    <img src="greenshirtpurplesky.jpg" />
+    <img src="greenshirtpurplesky.jpg" data-modal="greenshirtpurplesky.mp4" />
     <img src="blue.jpg" />
     <img src="pinkspace.jpg" />
     <img src="ribbon.jpg" />
@@ -82,44 +130,87 @@
     <img src="wineflower.jpg" />
 </div>
 
-<div style="justify-content:center" class="footer">
+<div class="footer">
     <a href="https://society6.com/krysialopez">society6</a>
     <a href="https://instagram.com/krysialopez">instagram</a>
     <a href="mailto:contact@christinelopez.ca">contact</a>
 </div>
 
 <div id="modal" style="display:none">
-    <video id="video" autoplay loop muted>
+    <img id="img-prev" class="modal-prev" src="" />
+    <video id="video-prev" class="modal-prev" autoplay loop muted>
+        <source id="video-prev-mp4" type="video/mp4" />
+    </video>
+    <img id="img-next" class="modal-next" src="" />
+    <video id="video-next" class="modal-next" autoplay loop muted>
+        <source id="video-next-mp4" type="video/mp4" />
+    </video>
+    <img id="img" src="" class="modal-star" />
+    <video id="video" class="modal-star" autoplay loop muted>
         <source id="video-mp4" type="video/mp4" />
     </video>
 </div>
 
 <script>
     (function () {
-        var modal = document.getElementById('modal');
-        var video = document.getElementById('video');
-        var videomp4 = document.getElementById('video-mp4');
-        modal.addEventListener('click', function () {
+        const modal = document.getElementById("modal");
+        const content = document.getElementById("content");
+        const video = document.getElementById("video");
+        const video_prev = document.getElementById("video-prev");
+        const video_next = document.getElementById("video-next");
+        const image = document.getElementById("img");
+        const image_prev = document.getElementById("img-prev");
+        const image_next = document.getElementById("img-next");
+        let star = null;
+        modal.addEventListener("click", function () {
             modal.style.display = "none";
-            video.style.display = "none";
         });
 
-        var anim = ['greenshirtpurplesky.jpg'];
-        var images = document.getElementsByTagName("img");
-        for (const image of images) {
-            image.addEventListener('click', function (e) {
-                modal.style.display = 'flex';
-                for (var i = 0; i < anim.length; i++) {
-                    if (image.src.endsWith(anim[i])) {
-                        modal.style.backgroundImage = '';
-                        videomp4.src = image.src.replace(/\....$/, '.mp4');
-                        video.load();
-                        video.play();
-                        video.style.display = "flex";
-                        return;
-                    }
+        function setModal(image, modalImage, modalVideo) {
+            if (image) {
+                const show = image.dataset.modal || image.src;
+                if (show.endsWith(".mp4")) {
+                    modalVideo.firstElementChild.src = show;
+                    modalVideo.load();
+                    modalVideo.play();
+                    modalVideo.style.display = "";
+                    modalImage.style.display = "none";
+                } else {
+                    modalImage.src = show;
+                    modalImage.style.display = "";
+                    modalVideo.style.display = "none";
                 }
-                modal.style.backgroundImage = 'url("' + image.src + '")';
+            } else {
+                modalVideo.style.display = "none";
+                modalImage.style.display = "none";
+            }
+        }
+        function setStar(newstar) {
+            star = newstar;
+            modal.style.display = "";
+            setModal(newstar.previousElementSibling, image_prev, video_prev);
+            setModal(newstar, image, video);
+            setModal(newstar.nextElementSibling, image_next, video_next);
+        }
+
+        for (const child of modal.children) {
+            if (child.id.endsWith("-prev")) {
+                child.addEventListener("click", function(e) {
+                    e.stopPropagation();
+                    setStar(star.previousElementSibling);
+                });
+            }
+            if (child.id.endsWith("-next")) {
+                child.addEventListener("click", function(e) {
+                    e.stopPropagation();
+                    setStar(star.nextElementSibling);
+                });
+            }
+        }
+
+        for (const image of content.children) {
+            image.addEventListener("click", function () {
+                setStar(image);
             });
         }
     })();
